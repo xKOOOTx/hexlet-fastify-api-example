@@ -12,6 +12,7 @@ export default async (db) => {
   const [course2] = await db.insert(schemas.courses).values(
     buildCourse({ creatorId: user2.id }),
   ).returning()
+
   await db.insert(schemas.courseLessons).values(
     buildCourseLesson({ courseId: course2.id }),
   )
