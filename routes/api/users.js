@@ -7,6 +7,9 @@ export default async function (fastify) {
     fastify.get(
         '/users',
             async function (request) {
+                const data = request.body
+                data.creatorId = request.user.id
+                console.log('data.creatorId: ', data.creatorId)
                 const perPage = 1
                 const { page } = request.query;
                 const users = await db.query

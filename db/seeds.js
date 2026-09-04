@@ -16,4 +16,12 @@ export default async (db) => {
   await db.insert(schemas.courseLessons).values(
     buildCourseLesson({ courseId: course2.id }),
   )
+
+  await db.insert(schemas.users).values({
+    id: 3,
+      fullName: 'some name',
+      email: 'support@hexlet.io',
+      updatedAt: '2026-08-29',
+      createdAt: '2026-08-29',
+  })
 }
