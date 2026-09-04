@@ -1,4 +1,4 @@
-import * as schemas from '../../db/schema.js'
+import * as schemas from '../../db/schema.ts'
 import { eq, asc } from 'drizzle-orm'
 
 export default async function (fastify) {

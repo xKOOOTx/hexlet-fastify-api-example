@@ -1,5 +1,5 @@
-import * as schemas from './schema.js'
-import { buildCourse, buildCourseLesson, buildUser } from '../lib/data.js'
+import * as schemas from './schema.ts'
+import { buildCourse, buildCourseLesson, buildUser } from '../lib/data.ts'
 /**
  * @param {import("drizzle-orm/better-sqlite3").BetterSQLite3Database<typeof schemas>} db
  */

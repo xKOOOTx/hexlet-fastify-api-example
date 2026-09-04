@@ -1,4 +1,4 @@
 export default {
   dialect: 'sqlite',
-  schema: './db/schema.js',
+  schema: './src/db/schema.ts',
 }

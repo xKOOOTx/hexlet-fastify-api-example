@@ -3,11 +3,8 @@ import fp from 'fastify-plugin'
 import { drizzle } from 'drizzle-orm/better-sqlite3'
 import Database from 'better-sqlite3'
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
-// Начальные данные для базы
-import seed from '../db/seeds.js'
-
-// Описание схемы базы данных
-import * as schemas from '../db/schema.js'
+import seed from '../db/seeds.ts'
+import * as schemas from '../db/schema.ts'
 
 export default fp(async function (fastify) {
   const sqlite = new Database(':memory:')

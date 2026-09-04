@@ -16,6 +16,7 @@
     "@stoplight/prism-cli": "^5.15.11",
     "@typespec/compiler": "^1.15.0",
     "@typespec/http": "^1.15.0",
+    "@typespec/openapi": "^1.15.0",
     "@typespec/openapi3": "^1.15.0",
     "abstract-logging": "^2.0.1",
     "ajv": "^8.20.0",
@@ -47,6 +48,7 @@
     "fast-uri": "^4.1.4",
     "fastify": "^5.0.0",
     "fastify-cli": "^8.0.0",
+    "fastify-openapi-glue": "^4.11.4",
     "fastify-plugin": "^5.0.0",
     "fastq": "^1.20.3",
     "find-my-way": "^9.9.0",
@@ -126,13 +128,17 @@
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
     "@geut/openapi-box": "^5.0.8",
+    "@hey-api/openapi-ts": "^0.99.0",
+    "@types/node": "^26.4.1",
     "c8": "^11.0.0",
-    "drizzle-kit": "^0.31.10"
+    "drizzle-kit": "^0.31.10",
+    "typescript": "^6.0.3"
   },
   "scripts": {
     "test": "node --test test/routes/**/*.test.js",
-    "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "start": "fastify start -l info src/app.ts",
+    "dev": "fastify start -w -l info -P src/app.ts",
+    "check-types": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
