@@ -1,15 +1,22 @@
 import { eq, asc } from 'drizzle-orm'
 import * as schemas from '../../db/schema.js'
+import { schema } from '../../schema.js'
+
+/**
+  * @param {import('fastify').FastifyTypebox} fastify
+  */
 
 export default async function (fastify) {
   const db = fastify.db
 
     fastify.get(
         '/users',
+        {
+            schema: {
+                querystring: schema['/users'].GET.args.properties.query,
+            },
+        },
             async function (request) {
-                const data = request.body
-                data.creatorId = request.user.id
-                console.log('data.creatorId: ', data.creatorId)
                 const perPage = 1
                 const { page } = request.query;
                 const users = await db.query
@@ -26,6 +33,9 @@ export default async function (fastify) {
 
     fastify.get(
         '/users/:id',
+        {
+            schema: schema['/users/{id}'].GET.args.properties,
+        },
             async (request) => {
                 const user = await db.query.users.findFirst({
                     where: eq(schemas.users.id, request.params.id),
@@ -37,6 +47,14 @@ export default async function (fastify) {
 
     fastify.post(
         '/users',
+        {
+            schema: {
+                body: schema['/users'].POST.args.properties.body,
+                response: {
+                201: schema['/users'].POST.data,
+                },
+            },
+        },
             async (request, reply) => {
                 const [user] = await db.insert(schemas.users)
                 .values(request.body)
@@ -49,6 +67,10 @@ export default async function (fastify) {
 
     fastify.delete(
         '/users/:id',
+        {
+            // Возвращает { params: ... }
+            schema: schema['/users/{id}'].DELETE.args.properties,
+        },
             async (request, reply) => {
                 const [user] = await db.delete(schemas.users)
                 .where(eq(schemas.users.id, request.params.id))

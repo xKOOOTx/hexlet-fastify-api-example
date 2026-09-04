@@ -15,6 +15,9 @@ model User {
     updatedAt: string;
     createdAt: string;
 }
+model UserCreate {
+    ...OmitProperties<User, "id" | "createdAt" | "updatedAt">
+}
 
 @route("/users")
 namespace users {
@@ -31,5 +34,16 @@ namespace users {
     @get
     op show(@path id: numeric): {
         @body _: User;
+    };
+
+    @post
+    op create(@body user: UserCreate): {
+        @statusCode statusCode: 201;
+        @body _: User;
+    };
+
+    @delete
+    op remove(@path id: numeric): {
+        @statusCode statusCode: 204;
     };
 }

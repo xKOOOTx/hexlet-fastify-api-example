@@ -49,6 +49,32 @@
             "BearerAuth": []
           }
         ]
+      },
+      "post": {
+        "operationId": "users_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          }
+        }
       }
     },
     "/users/{id}": {
@@ -74,6 +100,24 @@
                 }
               }
             }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "users_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
           }
         }
       }
@@ -105,6 +149,22 @@
             "type": "string"
           },
           "createdAt": {
+            "type": "string"
+          }
+        }
+      },
+      "UserCreate": {
+        "type": "object",
+        "required": [
+          "fullName",
+          "email"
+        ],
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
             "type": "string"
           }
         }
