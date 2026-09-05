@@ -74,6 +74,10 @@ model Course {
 model CourseCreate {
     ...OmitProperties<Course, "id" | "createdAt" | "creatorId">
 }
+model CourseEditDTO {
+    name?: string;
+    description?: string;
+}
 
 @route("/courses")
 namespace courses {
@@ -93,6 +97,13 @@ namespace courses {
         @body _: Course;
     } | NotFoundError | UnauthorizedError;
 
+    @patch
+    @useAuth(BearerAuth)
+    @operationId("courseUpdate")
+    op update(@path id: numeric, @body _: CourseEditDTO): {
+        @body _: Course
+    } | NotFoundError | ForbiddenError;
+
     @post
     @useAuth(BearerAuth)
     @operationId("coursesCreate")
@@ -106,7 +117,7 @@ namespace courses {
     @operationId("coursesDelete")
     op remove(@path id: numeric): {
         @statusCode statusCode: 204;
-    } | NotFoundError | UnauthorizedError;
+    } | NotFoundError | UnauthorizedError | ForbiddenError;
 }
 
 model Lesson {
@@ -172,14 +183,19 @@ model ProblemDetails {
   instance?: string;
 }
 @error
-model NotFoundError {
-    @statusCode _: 404;
-    ...ProblemDetails;
-}
-@error
 model UnauthorizedError {
   @statusCode _: 401;
   ...ProblemDetails;
+}
+@error
+model ForbiddenError {
+  @statusCode _: 403;
+  ...ProblemDetails;
+}
+@error
+model NotFoundError {
+    @statusCode _: 404;
+    ...ProblemDetails;
 }
 @error
 model UnprocessableEntityError {

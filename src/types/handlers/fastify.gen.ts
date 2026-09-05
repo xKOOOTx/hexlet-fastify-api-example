@@ -2,7 +2,7 @@
 
 import type { RouteHandler } from 'fastify';
 
-import type { CoursesCreateData, CoursesCreateErrors, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteErrors, CoursesDeleteResponses, CoursesIndexData, CoursesIndexErrors, CoursesIndexResponses, CoursesShowData, CoursesShowErrors, CoursesShowResponses, LessonsCreateData, LessonsCreateErrors, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteErrors, LessonsDeleteResponses, LessonsIndexData, LessonsIndexErrors, LessonsIndexResponses, LessonsShowData, LessonsShowErrors, LessonsShowResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateErrors, UsersCreateResponses, UsersDeleteData, UsersDeleteErrors, UsersDeleteResponses, UsersIndexData, UsersIndexErrors, UsersIndexResponses, UsersShowData, UsersShowErrors, UsersShowResponses, UsersUpdateData, UsersUpdateErrors, UsersUpdateResponses } from './types.gen.js';
+import type { CoursesCreateData, CoursesCreateErrors, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteErrors, CoursesDeleteResponses, CoursesIndexData, CoursesIndexErrors, CoursesIndexResponses, CoursesShowData, CoursesShowErrors, CoursesShowResponses, CourseUpdateData, CourseUpdateErrors, CourseUpdateResponses, LessonsCreateData, LessonsCreateErrors, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteErrors, LessonsDeleteResponses, LessonsIndexData, LessonsIndexErrors, LessonsIndexResponses, LessonsShowData, LessonsShowErrors, LessonsShowResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateErrors, UsersCreateResponses, UsersDeleteData, UsersDeleteErrors, UsersDeleteResponses, UsersIndexData, UsersIndexErrors, UsersIndexResponses, UsersShowData, UsersShowErrors, UsersShowResponses, UsersUpdateData, UsersUpdateErrors, UsersUpdateResponses } from './types.gen.js';
 
 export type RouteHandlers = {
     coursesIndex: RouteHandler<{
@@ -20,6 +20,11 @@ export type RouteHandlers = {
     coursesShow: RouteHandler<{
         Params: CoursesShowData['path'];
         Reply: CoursesShowErrors & CoursesShowResponses;
+    }>;
+    courseUpdate: RouteHandler<{
+        Body: CourseUpdateData['body'];
+        Params: CourseUpdateData['path'];
+        Reply: CourseUpdateErrors & CourseUpdateResponses;
     }>;
     lessonsIndex: RouteHandler<{
         Querystring?: LessonsIndexData['query'];

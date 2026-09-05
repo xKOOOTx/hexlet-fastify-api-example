@@ -16,9 +16,22 @@ export type CourseCreate = {
     description: string;
 };
 
+export type CourseEditDto = {
+    name?: string;
+    description?: string;
+};
+
 export type Credentials = {
     email: string;
     password: string;
+};
+
+export type ForbiddenError = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
 };
 
 export type Lesson = {
@@ -165,6 +178,10 @@ export type CoursesDeleteErrors = {
      */
     401: UnauthorizedError;
     /**
+     * Access is forbidden.
+     */
+    403: ForbiddenError;
+    /**
      * The server cannot find the requested resource.
      */
     404: NotFoundError;
@@ -211,6 +228,37 @@ export type CoursesShowResponses = {
 };
 
 export type CoursesShowResponse = CoursesShowResponses[keyof CoursesShowResponses];
+
+export type CourseUpdateData = {
+    body: CourseEditDto;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/courses/{id}';
+};
+
+export type CourseUpdateErrors = {
+    /**
+     * Access is forbidden.
+     */
+    403: ForbiddenError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type CourseUpdateError = CourseUpdateErrors[keyof CourseUpdateErrors];
+
+export type CourseUpdateResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Course;
+};
+
+export type CourseUpdateResponse = CourseUpdateResponses[keyof CourseUpdateResponses];
 
 export type LessonsIndexData = {
     body?: never;

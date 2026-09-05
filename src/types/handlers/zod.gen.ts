@@ -14,9 +14,22 @@ export const zCourseCreate = z.object({
     description: z.string()
 });
 
+export const zCourseEditDto = z.object({
+    name: z.string().optional(),
+    description: z.string().optional()
+});
+
 export const zCredentials = z.object({
     email: z.string(),
     password: z.string()
+});
+
+export const zForbiddenError = z.object({
+    type: z.string().optional(),
+    title: z.string().optional(),
+    status: z.number().int().optional(),
+    detail: z.string().optional(),
+    instance: z.string().optional()
 });
 
 export const zLesson = z.object({
@@ -129,6 +142,17 @@ export const zCoursesShowPath = z.object({
  * The request has succeeded.
  */
 export const zCoursesShowResponse = zCourse;
+
+export const zCourseUpdateBody = zCourseEditDto;
+
+export const zCourseUpdatePath = z.object({
+    id: z.number()
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zCourseUpdateResponse = zCourse;
 
 export const zLessonsIndexQuery = z.object({
     page: z.number().optional().default(1)

@@ -1,6 +1,8 @@
 import { eq, asc } from 'drizzle-orm'
 import * as schemas from '../../db/schema.ts'
 import { defineHandlers, ensure, getPagingOptions, serializeTimestamps } from '../../lib/utils.ts';
+import { httpErrors } from '@fastify/sensible';
+import CoursePolicy from '../../policies/CoursePolicy.ts';
 
 const handlers = defineHandlers({
   async coursesIndex(request, reply) {
@@ -22,6 +24,25 @@ const handlers = defineHandlers({
     return reply.code(200).send(serializeTimestamps(course))
   },
 
+  async courseUpdate(request, reply) {
+    const course = await request.db.query.courses.findFirst({
+      where: eq(schemas.courses.id, request.params.id)
+    })
+    ensure(course, 404)
+
+    if (!CoursePolicy.canUpdate(course, request.user.id)) {
+      throw httpErrors.forbidden();
+    }
+
+    const [updated] = await request.db
+      .update(schemas.courses)
+      .set(request.body)
+      .where(eq(schemas.courses.id, request.params.id))
+      .returning()
+
+      return reply.code(200).send(serializeTimestamps(updated))
+  },
+
   async coursesCreate(request, reply) {
     const [course] = await request.db.insert(schemas.courses)
       .values({ ...request.body, creatorId: request.user.id })
@@ -31,6 +52,16 @@ const handlers = defineHandlers({
   },
 
   async coursesDelete(request, reply) {
+    const foundCourse = await request.db.query.courses.findFirst({
+      where: eq(schemas.courses.id, request.params.id)
+    })
+
+    ensure(foundCourse, 404)
+
+    if (!CoursePolicy.canDelete(foundCourse, request.user.id)) {
+      throw httpErrors.forbidden()
+    }
+
     const [course] = await request.db.transaction(async (tx) => {
       await tx.delete(schemas.courseLessons)
         .where(eq(schemas.courseLessons.courseId, request.params.id))
