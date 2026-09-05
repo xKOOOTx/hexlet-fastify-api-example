@@ -134,10 +134,11 @@
     "@types/pg": "^8.23.1",
     "c8": "^11.0.0",
     "drizzle-kit": "^0.31.10",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.0"
   },
   "scripts": {
-    "test": "node --test test/routes/**/*.test.js",
+    "test": "vitest run",
     "start": "fastify start -l info src/app.ts",
     "dev": "fastify start -w -l info -P src/app.ts",
     "check-types": "tsc --noEmit"

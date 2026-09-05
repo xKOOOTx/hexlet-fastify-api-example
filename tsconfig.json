@@ -11,5 +11,5 @@
     "allowImportingTsExtensions": true,
     "outDir": "dist",
   },
-  "include": ["src", "openapi-ts.config.ts"]
+  "include": ["src", "test", "openapi-ts.config.ts"]
 }

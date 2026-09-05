@@ -6,7 +6,10 @@ import * as schemas from '../db/schema.ts'
 import seed from '../db/seeds.ts'
 
 export default fp(async (fastify) => {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  const connectionString =
+    process.env.NODE_ENV === 'test' ? process.env.TEST_DATABASE_URL : process.env.DATABASE_URL
+
+  const pool = new Pool({ connectionString })
   const db = drizzle(pool, { schema: schemas })
 
   await pool.query(
