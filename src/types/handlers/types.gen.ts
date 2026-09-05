@@ -44,7 +44,6 @@ export type Lesson = {
 
 export type LessonCreate = {
     name: string;
-    courseId: number;
     body: string;
 };
 
@@ -172,6 +171,130 @@ export type CoursesCreateResponses = {
 
 export type CoursesCreateResponse = CoursesCreateResponses[keyof CoursesCreateResponses];
 
+export type CoursesLessonsIndexData = {
+    body?: never;
+    path: {
+        courseId: number;
+    };
+    query?: {
+        page?: number;
+        perPage?: number;
+    };
+    url: '/courses/{courseId}/lessons';
+};
+
+export type CoursesLessonsIndexErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+};
+
+export type CoursesLessonsIndexError = CoursesLessonsIndexErrors[keyof CoursesLessonsIndexErrors];
+
+export type CoursesLessonsIndexResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: {
+        data: Array<Lesson>;
+        meta: PageMeta;
+    };
+};
+
+export type CoursesLessonsIndexResponse = CoursesLessonsIndexResponses[keyof CoursesLessonsIndexResponses];
+
+export type CoursesLessonsCreateData = {
+    body: LessonCreate;
+    path: {
+        courseId: number;
+    };
+    query?: never;
+    url: '/courses/{courseId}/lessons';
+};
+
+export type CoursesLessonsCreateErrors = {
+    /**
+     * Client error
+     */
+    422: UnprocessableEntityError;
+};
+
+export type CoursesLessonsCreateError = CoursesLessonsCreateErrors[keyof CoursesLessonsCreateErrors];
+
+export type CoursesLessonsCreateResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: Lesson;
+};
+
+export type CoursesLessonsCreateResponse = CoursesLessonsCreateResponses[keyof CoursesLessonsCreateResponses];
+
+export type CoursesLessonsDeleteData = {
+    body?: never;
+    path: {
+        courseId: number;
+        id: number;
+    };
+    query?: never;
+    url: '/courses/{courseId}/lessons/{id}';
+};
+
+export type CoursesLessonsDeleteErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type CoursesLessonsDeleteError = CoursesLessonsDeleteErrors[keyof CoursesLessonsDeleteErrors];
+
+export type CoursesLessonsDeleteResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type CoursesLessonsDeleteResponse = CoursesLessonsDeleteResponses[keyof CoursesLessonsDeleteResponses];
+
+export type CoursesLessonsShowData = {
+    body?: never;
+    path: {
+        courseId: number;
+        id: number;
+    };
+    query?: never;
+    url: '/courses/{courseId}/lessons/{id}';
+};
+
+export type CoursesLessonsShowErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type CoursesLessonsShowError = CoursesLessonsShowErrors[keyof CoursesLessonsShowErrors];
+
+export type CoursesLessonsShowResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: Lesson;
+};
+
+export type CoursesLessonsShowResponse = CoursesLessonsShowResponses[keyof CoursesLessonsShowResponses];
+
 export type CoursesDeleteData = {
     body?: never;
     path: {
@@ -268,124 +391,6 @@ export type CourseUpdateResponses = {
 };
 
 export type CourseUpdateResponse = CourseUpdateResponses[keyof CourseUpdateResponses];
-
-export type LessonsIndexData = {
-    body?: never;
-    path?: never;
-    query?: {
-        page?: number;
-        perPage?: number;
-    };
-    url: '/lessons';
-};
-
-export type LessonsIndexErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: UnauthorizedError;
-};
-
-export type LessonsIndexError = LessonsIndexErrors[keyof LessonsIndexErrors];
-
-export type LessonsIndexResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: {
-        data: Array<Lesson>;
-        meta: PageMeta;
-    };
-};
-
-export type LessonsIndexResponse = LessonsIndexResponses[keyof LessonsIndexResponses];
-
-export type LessonsCreateData = {
-    body: LessonCreate;
-    path?: never;
-    query?: never;
-    url: '/lessons';
-};
-
-export type LessonsCreateErrors = {
-    /**
-     * Client error
-     */
-    422: UnprocessableEntityError;
-};
-
-export type LessonsCreateError = LessonsCreateErrors[keyof LessonsCreateErrors];
-
-export type LessonsCreateResponses = {
-    /**
-     * The request has succeeded and a new resource has been created as a result.
-     */
-    201: Lesson;
-};
-
-export type LessonsCreateResponse = LessonsCreateResponses[keyof LessonsCreateResponses];
-
-export type LessonsDeleteData = {
-    body?: never;
-    path: {
-        id: number;
-    };
-    query?: never;
-    url: '/lessons/{id}';
-};
-
-export type LessonsDeleteErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: UnauthorizedError;
-    /**
-     * The server cannot find the requested resource.
-     */
-    404: NotFoundError;
-};
-
-export type LessonsDeleteError = LessonsDeleteErrors[keyof LessonsDeleteErrors];
-
-export type LessonsDeleteResponses = {
-    /**
-     * There is no content to send for this request, but the headers may be useful.
-     */
-    204: void;
-};
-
-export type LessonsDeleteResponse = LessonsDeleteResponses[keyof LessonsDeleteResponses];
-
-export type LessonsShowData = {
-    body?: never;
-    path: {
-        id: number;
-    };
-    query?: never;
-    url: '/lessons/{id}';
-};
-
-export type LessonsShowErrors = {
-    /**
-     * Access is unauthorized.
-     */
-    401: UnauthorizedError;
-    /**
-     * The server cannot find the requested resource.
-     */
-    404: NotFoundError;
-};
-
-export type LessonsShowError = LessonsShowErrors[keyof LessonsShowErrors];
-
-export type LessonsShowResponses = {
-    /**
-     * The request has succeeded.
-     */
-    200: Lesson;
-};
-
-export type LessonsShowResponse = LessonsShowResponses[keyof LessonsShowResponses];
 
 export type TokensCreateData = {
     body: Credentials;

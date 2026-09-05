@@ -3,66 +3,102 @@ import { asc } from 'drizzle-orm'
 import * as schemas from '../../../src/db/schema.ts'
 import { createTest, getAuthHeader } from '../../helper.ts'
 
-const test = createTest();
+const test = createTest()
 
-test('get lessons', async ({ app }) => {
-    const headers = getAuthHeader(app);
-    const res = await app.inject({
-        url: '/api/lessons',
-        headers
-    })
-    assert.equal(res.statusCode, 200, res.body)
-})
+async function createCourse(app, headers) {
+  const res = await app.inject({
+    method: 'post',
+    url: '/api/courses',
+    body: { name: 'Test course', description: 'Test description' },
+    headers,
+  })
+  return JSON.parse(res.body)
+}
 
-test('get lessons/:id', async ({ app }) => {
-    const headers = getAuthHeader(app);
-    const lesson = await app.db.query.courseLessons.findFirst({ orderBy: asc(schemas.courseLessons.id) })
-    assert.ok(lesson)
+async function createLesson(app, courseId, headers) {
+  const res = await app.inject({
+    method: 'post',
+    url: `/api/courses/${courseId}/lessons`,
+    body: { name: 'Test lesson', body: 'Test body' },
+    headers,
+  })
+  return JSON.parse(res.body)
+}
 
-    const res = await app.inject({
-        url: `/api/lessons/${lesson.id}`,
-        headers
-    })
-    assert.equal(res.statusCode, 200, res.body)
-})
-
-test('post lessons', async ({ app }) => {
-    const headers = getAuthHeader(app);
-    const course = await app.db.query.courses.findFirst({ orderBy: asc(schemas.courses.id) })
-    assert.ok(course)
-    
-    const res = await app.inject({
-        method: 'post',
-        url: '/api/lessons',
-        body: { name: 'Test lesson', courseId: course.id, body: 'Test body' },
-        headers
-    })
-
-    assert.equal(res.statusCode, 201, res.body)
-})
-
-test('delete lessons/:id', async ({ app }) => {
-    const headers = getAuthHeader(app);
-    const lesson = await app.db.query.courseLessons.findFirst({ orderBy: asc(schemas.courseLessons.id) })
-    assert.ok(lesson)
-
-    const res = await app.inject({
-        method: 'delete',
-        url: `/api/lessons/${lesson.id}`,
-        headers
-    })
-
-    assert.equal(res.statusCode, 204, res.body)
-})
-
-test('get lessons returns data and meta', async ({ app }) => {
+test('get courses/:courseId/lessons', async ({ app }) => {
   const headers = getAuthHeader(app)
+  const course = await createCourse(app, headers)
+  await createLesson(app, course.id, headers)
 
-  const res = await app.inject({ url: '/api/lessons', headers })
+  const res = await app.inject({ url: `/api/courses/${course.id}/lessons`, headers })
   assert.equal(res.statusCode, 200, res.body)
+})
 
+test('get courses/:courseId/lessons returns only this course lessons', async ({ app }) => {
+  const headers = getAuthHeader(app)
+  const courseA = await createCourse(app, headers)
+  const courseB = await createCourse(app, headers)
+  await createLesson(app, courseA.id, headers)
+  await createLesson(app, courseB.id, headers)
+
+  const res = await app.inject({ url: `/api/courses/${courseA.id}/lessons`, headers })
   const json = JSON.parse(res.body)
-  assert.ok(Array.isArray(json.data))
-  assert.ok(json.meta)
-  assert.equal(typeof json.meta.total, 'number')
+
+  assert.ok(json.data.every((lesson) => lesson.courseId === courseA.id))
+})
+
+test('get courses/:courseId/lessons/:id wrong course returns 404', async ({ app }) => {
+  const headers = getAuthHeader(app)
+  const courseA = await createCourse(app, headers)
+  const courseB = await createCourse(app, headers)
+  const lesson = await createLesson(app, courseA.id, headers)
+
+  const res = await app.inject({ url: `/api/courses/${courseB.id}/lessons/${lesson.id}`, headers })
+  assert.equal(res.statusCode, 404, res.body)
+})
+
+test('post courses/:courseId/lessons ignores courseId in body', async ({ app }) => {
+  const headers = getAuthHeader(app)
+  const course = await createCourse(app, headers)
+  const otherCourse = await createCourse(app, headers)
+
+  const res = await app.inject({
+    method: 'post',
+    url: `/api/courses/${course.id}/lessons`,
+    body: { name: 'Test lesson', body: 'Test body', courseId: otherCourse.id },
+    headers,
+  })
+
+  assert.equal(res.statusCode, 201, res.body)
+  const json = JSON.parse(res.body)
+  assert.equal(json.courseId, course.id)
+})
+
+test('delete courses/:courseId/lessons/:id wrong course returns 404', async ({ app }) => {
+  const headers = getAuthHeader(app)
+  const courseA = await createCourse(app, headers)
+  const courseB = await createCourse(app, headers)
+  const lesson = await createLesson(app, courseA.id, headers)
+
+  const res = await app.inject({
+    method: 'delete',
+    url: `/api/courses/${courseB.id}/lessons/${lesson.id}`,
+    headers,
+  })
+
+  assert.equal(res.statusCode, 404, res.body)
+})
+
+test('delete courses/:courseId/lessons/:id', async ({ app }) => {
+  const headers = getAuthHeader(app)
+  const course = await createCourse(app, headers)
+  const lesson = await createLesson(app, course.id, headers)
+
+  const res = await app.inject({
+    method: 'delete',
+    url: `/api/courses/${course.id}/lessons/${lesson.id}`,
+    headers,
+  })
+
+  assert.equal(res.statusCode, 204, res.body)
 })

@@ -166,7 +166,7 @@ test('delete courses/:id removes its lessons', async ({ app }) => {
 
     const lessonsRes = await app.inject({
         method: 'post',
-        url: '/api/lessons',
+        url: `/api/courses/${course.id}/lessons`,
         body: { name: 'Test lesson', courseId: course.id, body: 'Test body' },
         headers
     })
@@ -179,7 +179,7 @@ test('delete courses/:id removes its lessons', async ({ app }) => {
     })
 
     const res = await app.inject({
-        url: `/api/lessons/${lesson.id}`,
+        url: `/api/courses/${course.id}/lessons/${lesson.id}`,
         headers
     })
     assert.equal(res.statusCode, 404, res.body)

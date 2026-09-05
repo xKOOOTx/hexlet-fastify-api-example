@@ -42,7 +42,6 @@ export const zLesson = z.object({
 
 export const zLessonCreate = z.object({
     name: z.string(),
-    courseId: z.number(),
     body: z.string()
 });
 
@@ -134,6 +133,54 @@ export const zCoursesCreateBody = zCourseCreate;
  */
 export const zCoursesCreateResponse = zCourse;
 
+export const zCoursesLessonsIndexPath = z.object({
+    courseId: z.number()
+});
+
+export const zCoursesLessonsIndexQuery = z.object({
+    page: z.number().int().gte(1).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional().default(1),
+    perPage: z.number().int().gte(1).lte(100).optional().default(10)
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zCoursesLessonsIndexResponse = z.object({
+    data: z.array(zLesson),
+    meta: zPageMeta
+});
+
+export const zCoursesLessonsCreateBody = zLessonCreate;
+
+export const zCoursesLessonsCreatePath = z.object({
+    courseId: z.number()
+});
+
+/**
+ * The request has succeeded and a new resource has been created as a result.
+ */
+export const zCoursesLessonsCreateResponse = zLesson;
+
+export const zCoursesLessonsDeletePath = z.object({
+    courseId: z.number(),
+    id: z.number()
+});
+
+/**
+ * There is no content to send for this request, but the headers may be useful.
+ */
+export const zCoursesLessonsDeleteResponse = z.void();
+
+export const zCoursesLessonsShowPath = z.object({
+    courseId: z.number(),
+    id: z.number()
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zCoursesLessonsShowResponse = zLesson;
+
 export const zCoursesDeletePath = z.object({
     id: z.number()
 });
@@ -162,44 +209,6 @@ export const zCourseUpdatePath = z.object({
  * The request has succeeded.
  */
 export const zCourseUpdateResponse = zCourse;
-
-export const zLessonsIndexQuery = z.object({
-    page: z.number().int().gte(1).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional().default(1),
-    perPage: z.number().int().gte(1).lte(100).optional().default(10)
-});
-
-/**
- * The request has succeeded.
- */
-export const zLessonsIndexResponse = z.object({
-    data: z.array(zLesson),
-    meta: zPageMeta
-});
-
-export const zLessonsCreateBody = zLessonCreate;
-
-/**
- * The request has succeeded and a new resource has been created as a result.
- */
-export const zLessonsCreateResponse = zLesson;
-
-export const zLessonsDeletePath = z.object({
-    id: z.number()
-});
-
-/**
- * There is no content to send for this request, but the headers may be useful.
- */
-export const zLessonsDeleteResponse = z.void();
-
-export const zLessonsShowPath = z.object({
-    id: z.number()
-});
-
-/**
- * The request has succeeded.
- */
-export const zLessonsShowResponse = zLesson;
 
 export const zTokensCreateBody = zCredentials;
 

@@ -143,19 +143,20 @@ model Lesson {
     createdAt: string;
 }
 model LessonCreate {
-    ...OmitProperties<Lesson, "id" | "createdAt">
+    ...OmitProperties<Lesson, "id" | "createdAt" | "courseId">
 }
 
-@route("/lessons")
+@route("/courses/{courseId}/lessons")
 namespace lessons {
     @get
     @useAuth(BearerAuth)
-    @operationId("lessonsIndex")
+    @operationId("coursesLessonsIndex")
     op index(
+        @path courseId: numeric,
         @query @minValue(1) page?: int32 = 1,
         @query @minValue(1) @maxValue(100) perPage?: int32 = 10
     ): {
-        @body _: {
+        @body lessons: {
             data: Lesson[];
             meta: PageMeta;
         };
@@ -163,23 +164,23 @@ namespace lessons {
 
     @get
     @useAuth(BearerAuth)
-    @operationId("lessonsShow")
-    op show(@path id: numeric): {
+    @operationId("coursesLessonsShow")
+    op show(@path courseId: numeric, @path id: numeric): {
         @body _: Lesson;
     } | NotFoundError | UnauthorizedError;
 
     @post
     @useAuth(BearerAuth)
-    @operationId("lessonsCreate")
-    op create(@body lesson: LessonCreate): {
+    @operationId("coursesLessonsCreate")
+    op create(@path courseId: numeric, @body lesson: LessonCreate): {
         @statusCode statusCode: 201;
         @body _: Lesson;
     } | UnprocessableEntityError;
 
     @delete
     @useAuth(BearerAuth)
-    @operationId("lessonsDelete")
-    op remove(@path id: numeric): {
+    @operationId("coursesLessonsDelete")
+    op remove(@path courseId: numeric, @path id: numeric): {
         @statusCode statusCode: 204;
     } | NotFoundError | UnauthorizedError;
 }

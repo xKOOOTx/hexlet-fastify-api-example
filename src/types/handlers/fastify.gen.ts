@@ -2,7 +2,7 @@
 
 import type { RouteHandler } from 'fastify';
 
-import type { CoursesCreateData, CoursesCreateErrors, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteErrors, CoursesDeleteResponses, CoursesIndexData, CoursesIndexErrors, CoursesIndexResponses, CoursesShowData, CoursesShowErrors, CoursesShowResponses, CourseUpdateData, CourseUpdateErrors, CourseUpdateResponses, LessonsCreateData, LessonsCreateErrors, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteErrors, LessonsDeleteResponses, LessonsIndexData, LessonsIndexErrors, LessonsIndexResponses, LessonsShowData, LessonsShowErrors, LessonsShowResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateErrors, UsersCreateResponses, UsersDeleteData, UsersDeleteErrors, UsersDeleteResponses, UsersIndexData, UsersIndexErrors, UsersIndexResponses, UsersShowData, UsersShowErrors, UsersShowResponses, UsersUpdateData, UsersUpdateErrors, UsersUpdateResponses } from './types.gen.js';
+import type { CoursesCreateData, CoursesCreateErrors, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteErrors, CoursesDeleteResponses, CoursesIndexData, CoursesIndexErrors, CoursesIndexResponses, CoursesLessonsCreateData, CoursesLessonsCreateErrors, CoursesLessonsCreateResponses, CoursesLessonsDeleteData, CoursesLessonsDeleteErrors, CoursesLessonsDeleteResponses, CoursesLessonsIndexData, CoursesLessonsIndexErrors, CoursesLessonsIndexResponses, CoursesLessonsShowData, CoursesLessonsShowErrors, CoursesLessonsShowResponses, CoursesShowData, CoursesShowErrors, CoursesShowResponses, CourseUpdateData, CourseUpdateErrors, CourseUpdateResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateErrors, UsersCreateResponses, UsersDeleteData, UsersDeleteErrors, UsersDeleteResponses, UsersIndexData, UsersIndexErrors, UsersIndexResponses, UsersShowData, UsersShowErrors, UsersShowResponses, UsersUpdateData, UsersUpdateErrors, UsersUpdateResponses } from './types.gen.js';
 
 export type RouteHandlers = {
     coursesIndex: RouteHandler<{
@@ -12,6 +12,24 @@ export type RouteHandlers = {
     coursesCreate: RouteHandler<{
         Body: CoursesCreateData['body'];
         Reply: CoursesCreateErrors & CoursesCreateResponses;
+    }>;
+    coursesLessonsIndex: RouteHandler<{
+        Params: CoursesLessonsIndexData['path'];
+        Querystring?: CoursesLessonsIndexData['query'];
+        Reply: CoursesLessonsIndexErrors & CoursesLessonsIndexResponses;
+    }>;
+    coursesLessonsCreate: RouteHandler<{
+        Body: CoursesLessonsCreateData['body'];
+        Params: CoursesLessonsCreateData['path'];
+        Reply: CoursesLessonsCreateErrors & CoursesLessonsCreateResponses;
+    }>;
+    coursesLessonsDelete: RouteHandler<{
+        Params: CoursesLessonsDeleteData['path'];
+        Reply: CoursesLessonsDeleteErrors & CoursesLessonsDeleteResponses;
+    }>;
+    coursesLessonsShow: RouteHandler<{
+        Params: CoursesLessonsShowData['path'];
+        Reply: CoursesLessonsShowErrors & CoursesLessonsShowResponses;
     }>;
     coursesDelete: RouteHandler<{
         Params: CoursesDeleteData['path'];
@@ -25,22 +43,6 @@ export type RouteHandlers = {
         Body: CourseUpdateData['body'];
         Params: CourseUpdateData['path'];
         Reply: CourseUpdateErrors & CourseUpdateResponses;
-    }>;
-    lessonsIndex: RouteHandler<{
-        Querystring?: LessonsIndexData['query'];
-        Reply: LessonsIndexErrors & LessonsIndexResponses;
-    }>;
-    lessonsCreate: RouteHandler<{
-        Body: LessonsCreateData['body'];
-        Reply: LessonsCreateErrors & LessonsCreateResponses;
-    }>;
-    lessonsDelete: RouteHandler<{
-        Params: LessonsDeleteData['path'];
-        Reply: LessonsDeleteErrors & LessonsDeleteResponses;
-    }>;
-    lessonsShow: RouteHandler<{
-        Params: LessonsShowData['path'];
-        Reply: LessonsShowErrors & LessonsShowResponses;
     }>;
     tokensCreate: RouteHandler<{
         Body: TokensCreateData['body'];
