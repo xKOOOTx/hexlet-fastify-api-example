@@ -43,22 +43,25 @@ export default fp(async function (fastify, opts) {
     securityHandlers,
   })
 
-  fastify.setErrorHandler((error, _request, reply) => {
+  fastify.setErrorHandler((error, request, reply) => {
     if (error instanceof z.ZodError) {
-      const errorDetail = {
-        status: 422,
-        title: 'Validation Error',
-        detail: 'Errors related to business logic such as uniqueness',
-        errors: error.issues.map((issue) => ({
-          field: issue.path.map(String).join('.'),
-          rule: issue.code,
-          message: issue.message
-        }))
-      }
-
-      return reply.code(422).send(errorDetail)
+      return reply
+        .code(422)
+        .header("content-type", "application/problem+json")
+        .send({
+          type: "/problems/validation-error",
+          title: "Validation Error",
+          status: 422,
+          detail: "Errors related to business logic such as uniqueness",
+          instance: request.url,
+          errors: error.issues.map((issue) => ({
+            field: issue.path.map(String).join("."),
+            rule: issue.code,
+            message: issue.message
+          })),
+        });
     }
 
     return reply.send(error)
-  })
+  });
 })

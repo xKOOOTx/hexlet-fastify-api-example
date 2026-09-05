@@ -2,7 +2,7 @@
 
 import type { RouteHandler } from 'fastify';
 
-import type { CoursesCreateData, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteResponses, CoursesIndexData, CoursesIndexResponses, CoursesShowData, CoursesShowResponses, LessonsCreateData, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteResponses, LessonsIndexData, LessonsIndexResponses, LessonsShowData, LessonsShowResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateResponses, UsersDeleteData, UsersDeleteResponses, UsersIndexData, UsersIndexResponses, UsersShowData, UsersShowResponses } from './types.gen.js';
+import type { CoursesCreateData, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteResponses, CoursesIndexData, CoursesIndexResponses, CoursesShowData, CoursesShowResponses, LessonsCreateData, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteResponses, LessonsIndexData, LessonsIndexResponses, LessonsShowData, LessonsShowResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateErrors, UsersCreateResponses, UsersDeleteData, UsersDeleteErrors, UsersDeleteResponses, UsersIndexData, UsersIndexErrors, UsersIndexResponses, UsersShowData, UsersShowErrors, UsersShowResponses, UsersUpdateData, UsersUpdateErrors, UsersUpdateResponses } from './types.gen.js';
 
 export type RouteHandlers = {
     coursesIndex: RouteHandler<{
@@ -43,18 +43,23 @@ export type RouteHandlers = {
     }>;
     usersIndex: RouteHandler<{
         Querystring?: UsersIndexData['query'];
-        Reply: UsersIndexResponses;
+        Reply: UsersIndexErrors & UsersIndexResponses;
     }>;
     usersCreate: RouteHandler<{
         Body: UsersCreateData['body'];
-        Reply: UsersCreateResponses;
+        Reply: UsersCreateErrors & UsersCreateResponses;
     }>;
     usersDelete: RouteHandler<{
         Params: UsersDeleteData['path'];
-        Reply: UsersDeleteResponses;
+        Reply: UsersDeleteErrors & UsersDeleteResponses;
     }>;
     usersShow: RouteHandler<{
         Params: UsersShowData['path'];
-        Reply: UsersShowResponses;
+        Reply: UsersShowErrors & UsersShowResponses;
+    }>;
+    usersUpdate: RouteHandler<{
+        Body: UsersUpdateData['body'];
+        Params: UsersUpdateData['path'];
+        Reply: UsersUpdateErrors & UsersUpdateResponses;
     }>;
 };

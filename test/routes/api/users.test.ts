@@ -77,6 +77,20 @@ test('post users email already taken (different case)', async ({ app }) => {
   assert.equal(res.statusCode, 422, res.body)
 })
 
+test('patch users/:id', async ({ app }) => {
+  const headers = getAuthHeader(app)
+  const user = await app.db.query.users.findFirst({ orderBy: asc(schemas.users.id) })
+  assert.ok(user)
+
+  const res = await app.inject({
+    method: 'patch',
+    url: `/api/users/${user.id}`,
+    body: { fullName: 'Updated Name' },
+    headers,
+  })
+  assert.equal(res.statusCode, 200, res.body)
+})
+
 test('delete users/:id', async ({ app }) => {
   const headers = getAuthHeader(app)
   const user = await app.db.query.users.findFirst({ orderBy: asc(schemas.users.id) })

@@ -21,6 +21,9 @@ model UserCreateDTO {
     ...OmitProperties<User, "id" | "createdAt" | "updatedAt">;
     password: string;
 }
+model UserEditDTO {
+    ...OptionalProperties<UserCreateDTO>
+}
 
 @route("/users")
 namespace users {
@@ -31,28 +34,35 @@ namespace users {
         @body _: {
             data: User[];
         };
-    };
+    } | UnauthorizedError;
 
     @get
     @useAuth(BearerAuth)
     @operationId("usersShow")
     op show(@path id: numeric): {
         @body _: User;
-    };
+    } | NotFoundError | UnauthorizedError;
 
     @post
     @operationId("usersCreate")
     op create(@body user: UserCreateDTO): {
         @statusCode statusCode: 201;
         @body _: User;
-    };
+    } | UnprocessableEntityError;
+
+    @patch
+    @useAuth(BearerAuth)
+    @operationId("usersUpdate")
+    op update(@path id: numeric, @body user: UserEditDTO): {
+        @body _: User;
+    } | NotFoundError | UnprocessableEntityError | UnauthorizedError;
 
     @delete
     @useAuth(BearerAuth)
     @operationId("usersDelete")
     op remove(@path id: numeric): {
         @statusCode statusCode: 204;
-    };
+    } | NotFoundError | UnauthorizedError;
 }
 
 model Course {
@@ -153,8 +163,33 @@ model Token {
 }
 
 @error
+model ProblemDetails {
+  @header("content-type") contentType: "application/problem+json";
+  type?: string;
+  title?: string;
+  status?: integer;
+  detail?: string;
+  instance?: string;
+}
+@error
 model NotFoundError {
     @statusCode _: 404;
+    ...ProblemDetails;
+}
+@error
+model UnauthorizedError {
+  @statusCode _: 401;
+  ...ProblemDetails;
+}
+@error
+model UnprocessableEntityError {
+  @statusCode _: 422;
+  ...ProblemDetails;
+  errors: Array<{
+    message: string;
+    rule: string;
+    field: string;
+  }>;
 }
 
 @route("/tokens")

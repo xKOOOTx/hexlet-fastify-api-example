@@ -33,8 +33,45 @@ export const zLessonCreate = z.object({
     body: z.string()
 });
 
+export const zNotFoundError = z.object({
+    type: z.string().optional(),
+    title: z.string().optional(),
+    status: z.number().int().optional(),
+    detail: z.string().optional(),
+    instance: z.string().optional()
+});
+
+export const zProblemDetails = z.object({
+    type: z.string().optional(),
+    title: z.string().optional(),
+    status: z.number().int().optional(),
+    detail: z.string().optional(),
+    instance: z.string().optional()
+});
+
 export const zToken = z.object({
     token: z.string()
+});
+
+export const zUnauthorizedError = z.object({
+    type: z.string().optional(),
+    title: z.string().optional(),
+    status: z.number().int().optional(),
+    detail: z.string().optional(),
+    instance: z.string().optional()
+});
+
+export const zUnprocessableEntityError = z.object({
+    type: z.string().optional(),
+    title: z.string().optional(),
+    status: z.number().int().optional(),
+    detail: z.string().optional(),
+    instance: z.string().optional(),
+    errors: z.array(z.object({
+        message: z.string(),
+        rule: z.string(),
+        field: z.string()
+    }))
 });
 
 export const zUser = z.object({
@@ -49,6 +86,12 @@ export const zUserCreateDto = z.object({
     fullName: z.string().nullable(),
     email: z.string(),
     password: z.string()
+});
+
+export const zUserEditDto = z.object({
+    fullName: z.string().nullish(),
+    email: z.string().optional(),
+    password: z.string().optional()
 });
 
 export const zCoursesIndexQuery = z.object({
@@ -165,3 +208,14 @@ export const zUsersShowPath = z.object({
  * The request has succeeded.
  */
 export const zUsersShowResponse = zUser;
+
+export const zUsersUpdateBody = zUserEditDto;
+
+export const zUsersUpdatePath = z.object({
+    id: z.number()
+});
+
+/**
+ * The request has succeeded.
+ */
+export const zUsersUpdateResponse = zUser;

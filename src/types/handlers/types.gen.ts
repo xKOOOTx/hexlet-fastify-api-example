@@ -35,8 +35,45 @@ export type LessonCreate = {
     body: string;
 };
 
+export type NotFoundError = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+};
+
+export type ProblemDetails = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+};
+
 export type Token = {
     token: string;
+};
+
+export type UnauthorizedError = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+};
+
+export type UnprocessableEntityError = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+    errors: Array<{
+        message: string;
+        rule: string;
+        field: string;
+    }>;
 };
 
 export type User = {
@@ -51,6 +88,12 @@ export type UserCreateDto = {
     fullName: string | null;
     email: string;
     password: string;
+};
+
+export type UserEditDto = {
+    fullName?: string | null;
+    email?: string;
+    password?: string;
 };
 
 export type CoursesIndexData = {
@@ -208,8 +251,10 @@ export type TokensCreateErrors = {
     /**
      * The server cannot find the requested resource.
      */
-    404: unknown;
+    404: NotFoundError;
 };
+
+export type TokensCreateError = TokensCreateErrors[keyof TokensCreateErrors];
 
 export type TokensCreateResponses = {
     /**
@@ -229,6 +274,15 @@ export type UsersIndexData = {
     url: '/users';
 };
 
+export type UsersIndexErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+};
+
+export type UsersIndexError = UsersIndexErrors[keyof UsersIndexErrors];
+
 export type UsersIndexResponses = {
     /**
      * The request has succeeded.
@@ -246,6 +300,15 @@ export type UsersCreateData = {
     query?: never;
     url: '/users';
 };
+
+export type UsersCreateErrors = {
+    /**
+     * Client error
+     */
+    422: UnprocessableEntityError;
+};
+
+export type UsersCreateError = UsersCreateErrors[keyof UsersCreateErrors];
 
 export type UsersCreateResponses = {
     /**
@@ -265,6 +328,19 @@ export type UsersDeleteData = {
     url: '/users/{id}';
 };
 
+export type UsersDeleteErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type UsersDeleteError = UsersDeleteErrors[keyof UsersDeleteErrors];
+
 export type UsersDeleteResponses = {
     /**
      * There is no content to send for this request, but the headers may be useful.
@@ -283,6 +359,19 @@ export type UsersShowData = {
     url: '/users/{id}';
 };
 
+export type UsersShowErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type UsersShowError = UsersShowErrors[keyof UsersShowErrors];
+
 export type UsersShowResponses = {
     /**
      * The request has succeeded.
@@ -291,3 +380,38 @@ export type UsersShowResponses = {
 };
 
 export type UsersShowResponse = UsersShowResponses[keyof UsersShowResponses];
+
+export type UsersUpdateData = {
+    body: UserEditDto;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type UsersUpdateErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+    /**
+     * Client error
+     */
+    422: UnprocessableEntityError;
+};
+
+export type UsersUpdateError = UsersUpdateErrors[keyof UsersUpdateErrors];
+
+export type UsersUpdateResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: User;
+};
+
+export type UsersUpdateResponse = UsersUpdateResponses[keyof UsersUpdateResponses];

@@ -36,6 +36,24 @@ const handlers = defineHandlers({
     return reply.code(201).send(serializeTimestamps(user))
   },
 
+  async usersUpdate(request, reply) {
+    const user = await request.db.query.users.findFirst({
+      where: eq(schemas.users.id, request.params.id)
+    })
+
+    ensure(user, 404)
+
+    const { password, ...rest } = request.body
+    const passwordDigest = password ? await hashPassword(password) : undefined
+    
+    const [updated] = await request.db.update(schemas.users)
+      .set({ ...rest, ...(passwordDigest && { passwordDigest }) })
+      .where(eq(schemas.users.id, request.params.id))
+      .returning()
+      
+      return reply.code(200).send(serializeTimestamps(updated))
+  },
+
   async usersDelete(request, reply) {
     const existing = await request.db.query.users.findFirst({
       where: eq(schemas.users.id, request.params.id)
