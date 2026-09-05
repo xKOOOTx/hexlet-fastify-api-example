@@ -268,6 +268,37 @@
         ]
       }
     },
+    "/tokens": {
+      "post": {
+        "operationId": "tokensCreate",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "The request has succeeded and a new resource has been created as a result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Credentials"
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "operationId": "usersIndex",
@@ -363,7 +394,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       },
       "delete": {
         "operationId": "usersDelete",
@@ -381,7 +417,12 @@
           "204": {
             "description": "There is no content to send for this request, but the headers may be useful. "
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -392,7 +433,6 @@
         "required": [
           "id",
           "name",
-          "creatorId",
           "description",
           "createdAt"
         ],
@@ -402,9 +442,6 @@
           },
           "name": {
             "type": "string"
-          },
-          "creatorId": {
-            "type": "number"
           },
           "description": {
             "type": "string"
@@ -418,17 +455,28 @@
         "type": "object",
         "required": [
           "name",
-          "creatorId",
           "description"
         ],
         "properties": {
           "name": {
             "type": "string"
           },
-          "creatorId": {
-            "type": "number"
-          },
           "description": {
+            "type": "string"
+          }
+        }
+      },
+      "Credentials": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
             "type": "string"
           }
         }
@@ -479,6 +527,17 @@
           }
         }
       },
+      "Token": {
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
       "User": {
         "type": "object",
         "required": [
@@ -512,7 +571,8 @@
         "type": "object",
         "required": [
           "fullName",
-          "email"
+          "email",
+          "password"
         ],
         "properties": {
           "fullName": {
@@ -520,6 +580,9 @@
             "nullable": true
           },
           "email": {
+            "type": "string"
+          },
+          "password": {
             "type": "string"
           }
         }

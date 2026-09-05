@@ -9,3 +9,10 @@ declare module 'fastify' {
     db: DrizzleDB
   }
 }
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    payload: { id: number }
+    user: { id: number }
+  }
+}

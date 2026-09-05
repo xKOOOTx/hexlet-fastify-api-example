@@ -2,7 +2,7 @@
 
 import type { RouteHandler } from 'fastify';
 
-import type { CoursesCreateData, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteResponses, CoursesIndexData, CoursesIndexResponses, CoursesShowData, CoursesShowResponses, LessonsCreateData, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteResponses, LessonsIndexData, LessonsIndexResponses, LessonsShowData, LessonsShowResponses, UsersCreateData, UsersCreateResponses, UsersDeleteData, UsersDeleteResponses, UsersIndexData, UsersIndexResponses, UsersShowData, UsersShowResponses } from './types.gen.js';
+import type { CoursesCreateData, CoursesCreateResponses, CoursesDeleteData, CoursesDeleteResponses, CoursesIndexData, CoursesIndexResponses, CoursesShowData, CoursesShowResponses, LessonsCreateData, LessonsCreateResponses, LessonsDeleteData, LessonsDeleteResponses, LessonsIndexData, LessonsIndexResponses, LessonsShowData, LessonsShowResponses, TokensCreateData, TokensCreateErrors, TokensCreateResponses, UsersCreateData, UsersCreateResponses, UsersDeleteData, UsersDeleteResponses, UsersIndexData, UsersIndexResponses, UsersShowData, UsersShowResponses } from './types.gen.js';
 
 export type RouteHandlers = {
     coursesIndex: RouteHandler<{
@@ -36,6 +36,10 @@ export type RouteHandlers = {
     lessonsShow: RouteHandler<{
         Params: LessonsShowData['path'];
         Reply: LessonsShowResponses;
+    }>;
+    tokensCreate: RouteHandler<{
+        Body: TokensCreateData['body'];
+        Reply: TokensCreateErrors & TokensCreateResponses;
     }>;
     usersIndex: RouteHandler<{
         Querystring?: UsersIndexData['query'];

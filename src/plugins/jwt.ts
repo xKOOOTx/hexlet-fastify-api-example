@@ -1,19 +1,11 @@
-import fp from 'fastify-plugin'
 import jwtPlugin from '@fastify/jwt'
+import fp from 'fastify-plugin'
 
 export default fp(async (fastify) => {
-  fastify.register(jwtPlugin, {
-    // секрет используемый для шифрования
-    // правильно передавать через переменные окружения
-    // https://github.com/fastify/fastify-env
-    secret: 'supersecret',
-  })
-  fastify.decorate('authenticate', async function (request, reply) {
-    try {
-      await request.jwtVerify()
-    }
-    catch (err) {
-      reply.send(err)
-    }
-  })
+  const secret = process.env.JWT_SECRET
+  if (!secret) {
+    throw new Error('JWT_SECRET is not set')
+  }
+
+  fastify.register(jwtPlugin, { secret })
 })

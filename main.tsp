@@ -18,13 +18,13 @@ model User {
     createdAt: string;
 }
 model UserCreateDTO {
-    ...OmitProperties<User, "id" | "createdAt" | "updatedAt">
+    ...OmitProperties<User, "id" | "createdAt" | "updatedAt">;
+    password: string;
 }
 
 @route("/users")
 namespace users {
     @get
-
     @useAuth(BearerAuth)
     @operationId("usersIndex")
     op index(@query page?: numeric = 1): {
@@ -34,6 +34,7 @@ namespace users {
     };
 
     @get
+    @useAuth(BearerAuth)
     @operationId("usersShow")
     op show(@path id: numeric): {
         @body _: User;
@@ -47,6 +48,7 @@ namespace users {
     };
 
     @delete
+    @useAuth(BearerAuth)
     @operationId("usersDelete")
     op remove(@path id: numeric): {
         @statusCode statusCode: 204;
@@ -56,12 +58,11 @@ namespace users {
 model Course {
     id: numeric;
     name: string;
-    creatorId: numeric;
     description: string;
     createdAt: string;
 }
 model CourseCreate {
-    ...OmitProperties<Course, "id" | "createdAt">
+    ...OmitProperties<Course, "id" | "createdAt" | "creatorId">
 }
 
 @route("/courses")
@@ -141,4 +142,27 @@ namespace lessons {
     op remove(@path id: numeric): {
         @statusCode statusCode: 204;
     };
+}
+
+model Credentials {
+    email: string;
+    password: string;
+}
+model Token {
+    token: string;
+}
+
+@error
+model NotFoundError {
+    @statusCode _: 404;
+}
+
+@route("/tokens")
+namespace tokens {
+    @post
+    @operationId("tokensCreate")
+    op create(@body _: Credentials): {
+        @body _: Token;
+        @statusCode statusCode: 201;
+    } | NotFoundError;
 }

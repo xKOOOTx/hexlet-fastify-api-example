@@ -32,7 +32,7 @@ export default fp(async function (fastify, opts) {
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'routes'),
     options: Object.assign({}, opts),
-    ignorePattern: /^api\/(users|courses|lessons)\.ts$/,
+    ignorePattern: /^api\/(users|courses|lessons|tokens)\.ts$/,
   })
 
   fastify.register(glue, {

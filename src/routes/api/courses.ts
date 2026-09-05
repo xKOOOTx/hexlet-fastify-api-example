@@ -24,7 +24,7 @@ const handlers = defineHandlers({
 
   async coursesCreate(request, reply) {
     const [course] = await request.db.insert(schemas.courses)
-      .values(request.body)
+      .values({ ...request.body, creatorId: request.user.id })
       .returning()
 
     return reply.code(201).send(serializeTimestamps(course))

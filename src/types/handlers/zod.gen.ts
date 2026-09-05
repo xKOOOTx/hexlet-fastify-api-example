@@ -5,15 +5,18 @@ import { z } from 'zod';
 export const zCourse = z.object({
     id: z.number(),
     name: z.string(),
-    creatorId: z.number(),
     description: z.string(),
     createdAt: z.string()
 });
 
 export const zCourseCreate = z.object({
     name: z.string(),
-    creatorId: z.number(),
     description: z.string()
+});
+
+export const zCredentials = z.object({
+    email: z.string(),
+    password: z.string()
 });
 
 export const zLesson = z.object({
@@ -30,6 +33,10 @@ export const zLessonCreate = z.object({
     body: z.string()
 });
 
+export const zToken = z.object({
+    token: z.string()
+});
+
 export const zUser = z.object({
     id: z.number(),
     fullName: z.string().nullable(),
@@ -40,7 +47,8 @@ export const zUser = z.object({
 
 export const zUserCreateDto = z.object({
     fullName: z.string().nullable(),
-    email: z.string()
+    email: z.string(),
+    password: z.string()
 });
 
 export const zCoursesIndexQuery = z.object({
@@ -114,6 +122,13 @@ export const zLessonsShowPath = z.object({
  * The request has succeeded.
  */
 export const zLessonsShowResponse = zLesson;
+
+export const zTokensCreateBody = zCredentials;
+
+/**
+ * The request has succeeded and a new resource has been created as a result.
+ */
+export const zTokensCreateResponse = zToken;
 
 export const zUsersIndexQuery = z.object({
     page: z.number().optional().default(1)

@@ -1,6 +1,7 @@
 import { eq, asc } from 'drizzle-orm'
 import * as schemas from '../../db/schema.ts'
 import { defineHandlers, ensure, getPagingOptions, serializeTimestamps } from '../../lib/utils.ts'
+import { hashPassword } from '../../lib/password.ts'
 
 const handlers = defineHandlers({
   async usersIndex(request, reply) {
@@ -23,8 +24,11 @@ const handlers = defineHandlers({
   },
 
   async usersCreate(request, reply) {
+    const { password, ...rest } = request.body
+    const passwordDigest = await hashPassword(password)
+
     const [user] = await request.db.insert(schemas.users)
-      .values(request.body)
+      .values({ ...rest, passwordDigest })
       .returning()
 
     return reply.code(201).send(serializeTimestamps(user))

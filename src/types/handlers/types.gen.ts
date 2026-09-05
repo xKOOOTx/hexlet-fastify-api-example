@@ -7,15 +7,18 @@ export type ClientOptions = {
 export type Course = {
     id: number;
     name: string;
-    creatorId: number;
     description: string;
     createdAt: string;
 };
 
 export type CourseCreate = {
     name: string;
-    creatorId: number;
     description: string;
+};
+
+export type Credentials = {
+    email: string;
+    password: string;
 };
 
 export type Lesson = {
@@ -32,6 +35,10 @@ export type LessonCreate = {
     body: string;
 };
 
+export type Token = {
+    token: string;
+};
+
 export type User = {
     id: number;
     fullName: string | null;
@@ -43,6 +50,7 @@ export type User = {
 export type UserCreateDto = {
     fullName: string | null;
     email: string;
+    password: string;
 };
 
 export type CoursesIndexData = {
@@ -188,6 +196,29 @@ export type LessonsShowResponses = {
 };
 
 export type LessonsShowResponse = LessonsShowResponses[keyof LessonsShowResponses];
+
+export type TokensCreateData = {
+    body: Credentials;
+    path?: never;
+    query?: never;
+    url: '/tokens';
+};
+
+export type TokensCreateErrors = {
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: unknown;
+};
+
+export type TokensCreateResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: Token;
+};
+
+export type TokensCreateResponse = TokensCreateResponses[keyof TokensCreateResponses];
 
 export type UsersIndexData = {
     body?: never;

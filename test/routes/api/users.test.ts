@@ -17,11 +17,13 @@ test('get users', async ({ app }) => {
 })
 
 test('get users/:id', async ({ app }) => {
+  const headers = getAuthHeader(app)
   const user = await app.db.query.users.findFirst({ orderBy: asc(schemas.users.id) })
   assert.ok(user)
 
   const res = await app.inject({
     url: `/api/users/${user.id}`,
+    headers
   })
   assert.equal(res.statusCode, 200, res.body)
 })
@@ -38,12 +40,14 @@ test('post users', async ({ app }) => {
 })
 
 test('delete users/:id', async ({ app }) => {
+  const headers = getAuthHeader(app)
   const user = await app.db.query.users.findFirst({ orderBy: asc(schemas.users.id) })
   assert.ok(user)
 
   const res = await app.inject({
     method: 'delete',
     url: `/api/users/${user.id}`,
+    headers
   })
   assert.equal(res.statusCode, 204, res.body)
 })
