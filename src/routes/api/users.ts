@@ -1,7 +1,9 @@
-import { eq, asc } from 'drizzle-orm'
+import { eq, asc, count } from 'drizzle-orm'
+import { httpErrors } from '@fastify/sensible'
 import * as schemas from '../../db/schema.ts'
 import { defineHandlers, ensure, getPagingOptions, serializeTimestamps } from '../../lib/utils.ts'
 import { hashPassword } from '../../lib/password.ts'
+import UserValidator from '../../validators/UserValidator.ts'
 
 const handlers = defineHandlers({
   async usersIndex(request, reply) {
@@ -24,7 +26,7 @@ const handlers = defineHandlers({
   },
 
   async usersCreate(request, reply) {
-    const { password, ...rest } = request.body
+    const { password, ...rest } = await UserValidator.validateCreate(request.db, request.body)
     const passwordDigest = await hashPassword(password)
 
     const [user] = await request.db.insert(schemas.users)
@@ -35,10 +37,20 @@ const handlers = defineHandlers({
   },
 
   async usersDelete(request, reply) {
-    const [user] = await request.db.delete(schemas.users)
-      .where(eq(schemas.users.id, request.params.id))
-      .returning()
-    ensure(user, 404)
+    const existing = await request.db.query.users.findFirst({
+      where: eq(schemas.users.id, request.params.id)
+    })
+    ensure(existing, 404)
+    const [{ total }] = await request.db
+      .select({ total: count() })
+      .from(schemas.courses)
+      .where(eq(schemas.courses.creatorId, request.params.id))
+    
+    if (total > 0) {
+      throw httpErrors.conflict(`User still owns ${total} course(s)`)
+    }
+    
+    await request.db.delete(schemas.users).where(eq(schemas.users.id, request.params.id))
 
     return reply.code(204).send()
   },

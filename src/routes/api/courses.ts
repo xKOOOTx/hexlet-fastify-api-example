@@ -31,9 +31,15 @@ const handlers = defineHandlers({
   },
 
   async coursesDelete(request, reply) {
-    const [course] = await request.db.delete(schemas.courses)
-      .where(eq(schemas.courses.id, request.params.id))
-      .returning()
+    const [course] = await request.db.transaction(async (tx) => {
+      await tx.delete(schemas.courseLessons)
+        .where(eq(schemas.courseLessons.courseId, request.params.id))
+
+      return tx.delete(schemas.courses)
+        .where(eq(schemas.courses.id, request.params.id))
+        .returning()
+    })
+
     ensure(course, 404)
 
     return reply.code(204).send()

@@ -6,6 +6,7 @@ import AutoLoad from '@fastify/autoload'
 import glue from 'fastify-openapi-glue'
 import serviceHandlers from './routes/handlers.ts'
 import securityHandlers from './security.ts'
+import * as z from 'zod'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -40,5 +41,24 @@ export default fp(async function (fastify, opts) {
     specification: path.join(__dirname, '..', 'tsp-output/@typespec/openapi3/openapi.json'),
     serviceHandlers,
     securityHandlers,
+  })
+
+  fastify.setErrorHandler((error, _request, reply) => {
+    if (error instanceof z.ZodError) {
+      const errorDetail = {
+        status: 422,
+        title: 'Validation Error',
+        detail: 'Errors related to business logic such as uniqueness',
+        errors: error.issues.map((issue) => ({
+          field: issue.path.map(String).join('.'),
+          rule: issue.code,
+          message: issue.message
+        }))
+      }
+
+      return reply.code(422).send(errorDetail)
+    }
+
+    return reply.send(error)
   })
 })
