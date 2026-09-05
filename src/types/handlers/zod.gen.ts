@@ -54,6 +54,13 @@ export const zNotFoundError = z.object({
     instance: z.string().optional()
 });
 
+export const zPageMeta = z.object({
+    page: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    perPage: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    total: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    totalPages: z.number().int().min(-2147483648, { message: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' })
+});
+
 export const zProblemDetails = z.object({
     type: z.string().optional(),
     title: z.string().optional(),
@@ -108,14 +115,16 @@ export const zUserEditDto = z.object({
 });
 
 export const zCoursesIndexQuery = z.object({
-    page: z.number().optional().default(1)
+    page: z.number().int().gte(1).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional().default(1),
+    perPage: z.number().int().gte(1).lte(100).optional().default(10)
 });
 
 /**
  * The request has succeeded.
  */
 export const zCoursesIndexResponse = z.object({
-    data: z.array(zCourse)
+    data: z.array(zCourse),
+    meta: zPageMeta
 });
 
 export const zCoursesCreateBody = zCourseCreate;
@@ -155,14 +164,16 @@ export const zCourseUpdatePath = z.object({
 export const zCourseUpdateResponse = zCourse;
 
 export const zLessonsIndexQuery = z.object({
-    page: z.number().optional().default(1)
+    page: z.number().int().gte(1).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional().default(1),
+    perPage: z.number().int().gte(1).lte(100).optional().default(10)
 });
 
 /**
  * The request has succeeded.
  */
 export const zLessonsIndexResponse = z.object({
-    data: z.array(zLesson)
+    data: z.array(zLesson),
+    meta: zPageMeta
 });
 
 export const zLessonsCreateBody = zLessonCreate;
@@ -198,14 +209,16 @@ export const zTokensCreateBody = zCredentials;
 export const zTokensCreateResponse = zToken;
 
 export const zUsersIndexQuery = z.object({
-    page: z.number().optional().default(1)
+    page: z.number().int().gte(1).max(2147483647, { message: 'Invalid value: Expected int32 to be <= 2147483647' }).optional().default(1),
+    perPage: z.number().int().gte(1).lte(100).optional().default(10)
 });
 
 /**
  * The request has succeeded.
  */
 export const zUsersIndexResponse = z.object({
-    data: z.array(zUser)
+    data: z.array(zUser),
+    meta: zPageMeta
 });
 
 export const zUsersCreateBody = zUserCreateDto;

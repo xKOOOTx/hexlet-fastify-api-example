@@ -4,16 +4,20 @@ import * as schemas from '../../db/schema.ts'
 import { defineHandlers, ensure, getPagingOptions, serializeTimestamps } from '../../lib/utils.ts'
 import { hashPassword } from '../../lib/password.ts'
 import UserValidator from '../../validators/UserValidator.ts'
+import UserSerializer from '../../serializers/UserSerializer.ts'
 
 const handlers = defineHandlers({
   async usersIndex(request, reply) {
     const page = request.query?.page ?? 1
+    const perPage = request.query?.perPage ?? 10
+    const [{ total }] = await request.db.select({ total: count() }).from(schemas.users)
+    const totalPages = Math.ceil(total / perPage)
     const users = await request.db.query.users.findMany({
       orderBy: asc(schemas.users.id),
-      ...getPagingOptions(page, 1),
+      ...getPagingOptions(page, perPage),
     })
 
-    return reply.code(200).send({ data: users.map(serializeTimestamps) })
+    return reply.code(200).send(UserSerializer.index(users.map(serializeTimestamps), {page, perPage, total, totalPages}))
   },
 
   async usersShow(request, reply) {

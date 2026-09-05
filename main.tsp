@@ -10,6 +10,13 @@ using TypeSpec.OpenAPI;
 
 namespace FastifyRestApiExample;
 
+model PageMeta {
+    page: int32;
+    perPage: int32;
+    total: int32;
+    totalPages: int32;
+}
+
 model User {
     id: numeric;
     fullName: string | null;
@@ -30,9 +37,13 @@ namespace users {
     @get
     @useAuth(BearerAuth)
     @operationId("usersIndex")
-    op index(@query page?: numeric = 1): {
+    op index(
+        @query @minValue(1) page?: int32 = 1,
+        @query @minValue(1) @maxValue(100) perPage?: int32 = 10,
+    ): {
         @body _: {
             data: User[];
+            meta: PageMeta
         };
     } | UnauthorizedError;
 
@@ -84,9 +95,13 @@ namespace courses {
     @get
     @useAuth(BearerAuth)
     @operationId("coursesIndex")
-    op index(@query page?: numeric = 1): {
+    op index(
+        @query @minValue(1) page?: int32 = 1,
+        @query @minValue(1) @maxValue(100) perPage?: int32 = 10
+    ): {
         @body _: {
             data: Course[];
+            meta: PageMeta;
         };
     } | UnauthorizedError;
 
@@ -136,9 +151,13 @@ namespace lessons {
     @get
     @useAuth(BearerAuth)
     @operationId("lessonsIndex")
-    op index(@query page?: numeric = 1): {
+    op index(
+        @query @minValue(1) page?: int32 = 1,
+        @query @minValue(1) @maxValue(100) perPage?: int32 = 10
+    ): {
         @body _: {
             data: Lesson[];
+            meta: PageMeta;
         };
     } | UnauthorizedError;
 

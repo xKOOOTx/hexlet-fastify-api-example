@@ -56,6 +56,13 @@ export type NotFoundError = {
     instance?: string;
 };
 
+export type PageMeta = {
+    page: number;
+    perPage: number;
+    total: number;
+    totalPages: number;
+};
+
 export type ProblemDetails = {
     type?: string;
     title?: string;
@@ -114,6 +121,7 @@ export type CoursesIndexData = {
     path?: never;
     query?: {
         page?: number;
+        perPage?: number;
     };
     url: '/courses';
 };
@@ -133,6 +141,7 @@ export type CoursesIndexResponses = {
      */
     200: {
         data: Array<Course>;
+        meta: PageMeta;
     };
 };
 
@@ -265,6 +274,7 @@ export type LessonsIndexData = {
     path?: never;
     query?: {
         page?: number;
+        perPage?: number;
     };
     url: '/lessons';
 };
@@ -284,6 +294,7 @@ export type LessonsIndexResponses = {
      */
     200: {
         data: Array<Lesson>;
+        meta: PageMeta;
     };
 };
 
@@ -406,6 +417,7 @@ export type UsersIndexData = {
     path?: never;
     query?: {
         page?: number;
+        perPage?: number;
     };
     url: '/users';
 };
@@ -425,6 +437,7 @@ export type UsersIndexResponses = {
      */
     200: {
         data: Array<User>;
+        meta: PageMeta;
     };
 };
 

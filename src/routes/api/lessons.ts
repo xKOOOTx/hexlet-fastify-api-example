@@ -1,16 +1,21 @@
-import { eq, asc } from 'drizzle-orm'
+import { eq, asc, count } from 'drizzle-orm'
 import * as schemas from '../../db/schema.ts'
 import { defineHandlers, ensure, getPagingOptions, serializeTimestamps } from '../../lib/utils.ts'
+import LessonSerializer from '../../serializers/LessonSerializer.ts'
 
 const handlers = defineHandlers({
   async lessonsIndex(request, reply) {
     const page = request.query?.page ?? 1
+    const perPage = request.query?.perPage ?? 10
+    const [{ total }] = await request.db.select({ total: count() }).from(schemas.courseLessons)
+    const totalPages = Math.ceil(total / perPage)
+
     const lessons = await request.db.query.courseLessons.findMany({
       orderBy: asc(schemas.courseLessons.id),
-      ...getPagingOptions(page, 1),
+      ...getPagingOptions(page, perPage),
     })
 
-    return reply.code(200).send({ data: lessons.map(serializeTimestamps) })
+    return reply.code(200).send(LessonSerializer.index(lessons.map(serializeTimestamps), {page, perPage, total, totalPages}))
   },
 
   async lessonsShow(request, reply) {

@@ -1,18 +1,23 @@
-import { eq, asc } from 'drizzle-orm'
+import { eq, asc, count } from 'drizzle-orm'
 import * as schemas from '../../db/schema.ts'
 import { defineHandlers, ensure, getPagingOptions, serializeTimestamps } from '../../lib/utils.ts';
 import { httpErrors } from '@fastify/sensible';
 import CoursePolicy from '../../policies/CoursePolicy.ts';
+import CourseSerializer from '../../serializers/CourseSerializer.ts';
 
 const handlers = defineHandlers({
   async coursesIndex(request, reply) {
     const page = request.query?.page ?? 1
+    const perPage = request.query?.perPage ?? 10
+    const [{ total }] = await request.db.select({ total: count() }).from(schemas.courses)
+    const totalPages = Math.ceil(total / perPage)
+
     const courses = await request.db.query.courses.findMany({
       orderBy: asc(schemas.courses.id),
-      ...getPagingOptions(page, 1),
+      ...getPagingOptions(page, perPage),
     })
 
-    return reply.code(200).send({ data: courses.map(serializeTimestamps) })
+    return reply.code(200).send(CourseSerializer.index(courses.map(serializeTimestamps), {page, perPage, total, totalPages}))
   },
 
   async coursesShow(request, reply) {

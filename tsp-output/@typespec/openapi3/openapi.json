@@ -15,8 +15,23 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "number",
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
               "default": 1
+            },
+            "explode": false
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             },
             "explode": false
           }
@@ -34,10 +49,14 @@
                       "items": {
                         "$ref": "#/components/schemas/Course"
                       }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PageMeta"
                     }
                   },
                   "required": [
-                    "data"
+                    "data",
+                    "meta"
                   ]
                 }
               }
@@ -276,8 +295,23 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "number",
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
               "default": 1
+            },
+            "explode": false
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             },
             "explode": false
           }
@@ -295,10 +329,14 @@
                       "items": {
                         "$ref": "#/components/schemas/Lesson"
                       }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PageMeta"
                     }
                   },
                   "required": [
-                    "data"
+                    "data",
+                    "meta"
                   ]
                 }
               }
@@ -505,8 +543,23 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "number",
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
               "default": 1
+            },
+            "explode": false
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
             },
             "explode": false
           }
@@ -524,10 +577,14 @@
                       "items": {
                         "$ref": "#/components/schemas/User"
                       }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PageMeta"
                     }
                   },
                   "required": [
-                    "data"
+                    "data",
+                    "meta"
                   ]
                 }
               }
@@ -902,6 +959,33 @@
           },
           "instance": {
             "type": "string"
+          }
+        }
+      },
+      "PageMeta": {
+        "type": "object",
+        "required": [
+          "page",
+          "perPage",
+          "total",
+          "totalPages"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "perPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
