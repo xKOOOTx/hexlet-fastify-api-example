@@ -105,6 +105,15 @@ export type CoursesIndexData = {
     url: '/courses';
 };
 
+export type CoursesIndexErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+};
+
+export type CoursesIndexError = CoursesIndexErrors[keyof CoursesIndexErrors];
+
 export type CoursesIndexResponses = {
     /**
      * The request has succeeded.
@@ -122,6 +131,15 @@ export type CoursesCreateData = {
     query?: never;
     url: '/courses';
 };
+
+export type CoursesCreateErrors = {
+    /**
+     * Client error
+     */
+    422: UnprocessableEntityError;
+};
+
+export type CoursesCreateError = CoursesCreateErrors[keyof CoursesCreateErrors];
 
 export type CoursesCreateResponses = {
     /**
@@ -141,6 +159,19 @@ export type CoursesDeleteData = {
     url: '/courses/{id}';
 };
 
+export type CoursesDeleteErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type CoursesDeleteError = CoursesDeleteErrors[keyof CoursesDeleteErrors];
+
 export type CoursesDeleteResponses = {
     /**
      * There is no content to send for this request, but the headers may be useful.
@@ -158,6 +189,19 @@ export type CoursesShowData = {
     query?: never;
     url: '/courses/{id}';
 };
+
+export type CoursesShowErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type CoursesShowError = CoursesShowErrors[keyof CoursesShowErrors];
 
 export type CoursesShowResponses = {
     /**
@@ -177,6 +221,15 @@ export type LessonsIndexData = {
     url: '/lessons';
 };
 
+export type LessonsIndexErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+};
+
+export type LessonsIndexError = LessonsIndexErrors[keyof LessonsIndexErrors];
+
 export type LessonsIndexResponses = {
     /**
      * The request has succeeded.
@@ -194,6 +247,15 @@ export type LessonsCreateData = {
     query?: never;
     url: '/lessons';
 };
+
+export type LessonsCreateErrors = {
+    /**
+     * Client error
+     */
+    422: UnprocessableEntityError;
+};
+
+export type LessonsCreateError = LessonsCreateErrors[keyof LessonsCreateErrors];
 
 export type LessonsCreateResponses = {
     /**
@@ -213,6 +275,19 @@ export type LessonsDeleteData = {
     url: '/lessons/{id}';
 };
 
+export type LessonsDeleteErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type LessonsDeleteError = LessonsDeleteErrors[keyof LessonsDeleteErrors];
+
 export type LessonsDeleteResponses = {
     /**
      * There is no content to send for this request, but the headers may be useful.
@@ -230,6 +305,19 @@ export type LessonsShowData = {
     query?: never;
     url: '/lessons/{id}';
 };
+
+export type LessonsShowErrors = {
+    /**
+     * Access is unauthorized.
+     */
+    401: UnauthorizedError;
+    /**
+     * The server cannot find the requested resource.
+     */
+    404: NotFoundError;
+};
+
+export type LessonsShowError = LessonsShowErrors[keyof LessonsShowErrors];
 
 export type LessonsShowResponses = {
     /**

@@ -42,6 +42,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -60,6 +70,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityError"
                 }
               }
             }
@@ -105,6 +125,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -128,6 +168,26 @@
         "responses": {
           "204": {
             "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -173,6 +233,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -191,6 +261,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Lesson"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessableEntityError"
                 }
               }
             }
@@ -236,6 +316,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -259,6 +359,26 @@
         "responses": {
           "204": {
             "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server cannot find the requested resource.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
           }
         },
         "security": [

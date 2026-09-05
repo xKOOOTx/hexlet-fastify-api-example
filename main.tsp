@@ -84,14 +84,14 @@ namespace courses {
         @body _: {
             data: Course[];
         };
-    };
+    } | UnauthorizedError;
 
     @get
     @useAuth(BearerAuth)
     @operationId("coursesShow")
     op show(@path id: numeric): {
         @body _: Course;
-    };
+    } | NotFoundError | UnauthorizedError;
 
     @post
     @useAuth(BearerAuth)
@@ -99,14 +99,14 @@ namespace courses {
     op create(@body course: CourseCreate): {
         @statusCode statusCode: 201;
         @body _: Course;
-    };
+    } | UnprocessableEntityError;
 
     @delete
     @useAuth(BearerAuth)
     @operationId("coursesDelete")
     op remove(@path id: numeric): {
         @statusCode statusCode: 204;
-    };
+    } | NotFoundError | UnauthorizedError;
 }
 
 model Lesson {
@@ -129,14 +129,14 @@ namespace lessons {
         @body _: {
             data: Lesson[];
         };
-    };
+    } | UnauthorizedError;
 
     @get
     @useAuth(BearerAuth)
     @operationId("lessonsShow")
     op show(@path id: numeric): {
         @body _: Lesson;
-    };
+    } | NotFoundError | UnauthorizedError;
 
     @post
     @useAuth(BearerAuth)
@@ -144,14 +144,14 @@ namespace lessons {
     op create(@body lesson: LessonCreate): {
         @statusCode statusCode: 201;
         @body _: Lesson;
-    };
+    } | UnprocessableEntityError;
 
     @delete
     @useAuth(BearerAuth)
     @operationId("lessonsDelete")
     op remove(@path id: numeric): {
         @statusCode statusCode: 204;
-    };
+    } | NotFoundError | UnauthorizedError;
 }
 
 model Credentials {

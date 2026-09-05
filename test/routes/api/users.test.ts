@@ -28,6 +28,17 @@ test('get users/:id', async ({ app }) => {
   assert.equal(res.statusCode, 200, res.body)
 })
 
+test('get users/:id not found', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const res = await app.inject({
+    url: '/api/users/9999999',
+    headers
+  })
+
+  assert.equal(res.statusCode, 404, res.body)
+})
+
 test('post users', async ({ app }) => {
   const body = buildUser()
 
@@ -75,6 +86,32 @@ test('post users email already taken (different case)', async ({ app }) => {
   })
 
   assert.equal(res.statusCode, 422, res.body)
+})
+
+test('post users email already taken responds with problem details', async ({ app }) => {
+  const first = buildUser()
+  await app.inject({ 
+    method: 'post',
+    url: '/api/users',
+    body: first
+  })
+
+  const duplicate = buildUser({ email: first.email })
+  const res = await app.inject({
+    method: 'post',
+    url: '/api/users',
+    body: duplicate
+  })
+
+  assert.equal(res.statusCode, 422, res.body)
+  assert.equal(res.headers['content-type'], 'application/problem+json; charset=utf-8')
+
+  const json = JSON.parse(res.body)
+  assert.equal(json.type, '/problems/validation-error')
+  assert.equal(json.title, 'Validation Error')
+  assert.equal(json.status, 422)
+  assert.equal(json.instance, '/api/users')
+  assert.ok(Array.isArray(json.errors))
 })
 
 test('patch users/:id', async ({ app }) => {
