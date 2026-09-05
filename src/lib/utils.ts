@@ -18,3 +18,13 @@ export const getPagingOptions = (page: number, perPage: number) => ({
   limit: perPage,
   offset: (page - 1) * perPage,
 })
+
+export function serializeTimestamps<T extends { createdAt: Date; updatedAt: Date }> (
+  record: T,
+): Omit<T, 'createdAt' | 'updatedAt'> & { createdAt: string; updatedAt: string } {
+  return {
+    ...record,
+    createdAt: record.createdAt.toISOString(),
+    updatedAt: record.updatedAt.toISOString()
+  }
+}

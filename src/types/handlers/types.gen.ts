@@ -40,7 +40,7 @@ export type User = {
     createdAt: string;
 };
 
-export type UserCreate = {
+export type UserCreateDto = {
     fullName: string | null;
     email: string;
 };
@@ -210,7 +210,7 @@ export type UsersIndexResponses = {
 export type UsersIndexResponse = UsersIndexResponses[keyof UsersIndexResponses];
 
 export type UsersCreateData = {
-    body: UserCreate;
+    body: UserCreateDto;
     path?: never;
     query?: never;
     url: '/users';

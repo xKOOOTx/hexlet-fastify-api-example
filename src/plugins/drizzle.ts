@@ -1,23 +1,25 @@
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { migrate } from 'drizzle-orm/node-postgres/migrator'
 import fp from 'fastify-plugin'
-
-import { drizzle } from 'drizzle-orm/better-sqlite3'
-import Database from 'better-sqlite3'
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
-import seed from '../db/seeds.ts'
+import { Pool } from 'pg'
 import * as schemas from '../db/schema.ts'
+import seed from '../db/seeds.ts'
 
-export default fp(async function (fastify) {
-  const sqlite = new Database(':memory:')
-  const db = drizzle(sqlite, { schema: schemas })
-  // Автоматическое выполнение миграций
-  migrate(db, { migrationsFolder: 'drizzle' })
-  // Заполнение базы данных данными
+export default fp(async (fastify) => {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  const db = drizzle(pool, { schema: schemas })
+
+  await pool.query(
+    'DROP SCHEMA public CASCADE; DROP SCHEMA IF EXISTS drizzle CASCADE; CREATE SCHEMA public;',
+  )
+  await migrate(db, { migrationsFolder: 'drizzle' })
   await seed(db)
 
-  if (!fastify.db) {
-    fastify.decorate('db', db)
-    fastify.addHook('onClose', () => {
-      sqlite.close()
-    })
-  }
+  fastify.decorate('db', db)
+  fastify.decorateRequest('db', {
+    getter() {
+      return fastify.db
+    },
+  })
+  fastify.addHook('onClose', () => pool.end())
 })

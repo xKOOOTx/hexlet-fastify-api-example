@@ -332,7 +332,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserCreate"
+                "$ref": "#/components/schemas/UserCreateDTO"
               }
             }
           }
@@ -508,7 +508,7 @@
           }
         }
       },
-      "UserCreate": {
+      "UserCreateDTO": {
         "type": "object",
         "required": [
           "fullName",

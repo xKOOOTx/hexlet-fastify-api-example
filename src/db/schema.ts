@@ -1,36 +1,38 @@
-import { sql } from 'drizzle-orm'
-import {
-  text,
-  integer,
-  sqliteTable,
-} from 'drizzle-orm/sqlite-core'
+import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
-export const users = sqliteTable('users', {
-  id: integer('id').primaryKey(),
+const timestamps = {
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+}
+
+const id = integer('id').primaryKey().generatedByDefaultAsIdentity()
+
+export const users = pgTable('users', {
+  id,
   fullName: text('full_name'),
   email: text('email').notNull().unique(),
-  updatedAt: text('updated_at'),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(unixepoch())`),
+  ...timestamps,
 })
 
-export const courses = sqliteTable('courses', {
-  id: integer('id').primaryKey(),
+export const courses = pgTable('courses', {
+  id,
   name: text('name').notNull(),
-  creatorId: integer('creator_id').references(() => users.id).notNull(),
+  creatorId: integer('creator_id')
+    .references(() => users.id, { onDelete: 'restrict' })
+    .notNull(),
   description: text('description').notNull(),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(unixepoch())`),
+  ...timestamps,
 })
 
-export const courseLessons = sqliteTable('course_lessons', {
-  id: integer('id').primaryKey(),
+export const courseLessons = pgTable('course_lessons', {
+  id,
   name: text('name').notNull(),
-  courseId: integer('courseId').references(() => courses.id).notNull(),
+  courseId: integer('course_id')
+    .references(() => courses.id, { onDelete: 'restrict' })
+    .notNull(),
   body: text('body').notNull(),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(unixepoch())`),
+  ...timestamps,
 })

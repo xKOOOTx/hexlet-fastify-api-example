@@ -17,7 +17,7 @@ model User {
     updatedAt: string | null;
     createdAt: string;
 }
-model UserCreate {
+model UserCreateDTO {
     ...OmitProperties<User, "id" | "createdAt" | "updatedAt">
 }
 
@@ -41,7 +41,7 @@ namespace users {
 
     @post
     @operationId("usersCreate")
-    op create(@body user: UserCreate): {
+    op create(@body user: UserCreateDTO): {
         @statusCode statusCode: 201;
         @body _: User;
     };

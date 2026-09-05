@@ -1,30 +1,28 @@
 import { faker } from '@faker-js/faker'
+import type { CourseInsert, CourseLessonInsert, UserInsert } from '../types/index.ts'
 
-export function buildUser(params = {}) {
-  const user = {
+export function buildUser(params: Partial<UserInsert> = {}): UserInsert {
+  return {
     fullName: faker.person.fullName(),
     email: faker.internet.email(),
+    ...params,
   }
-
-  return Object.assign({}, user, params)
 }
 
-export function buildCourse(params = {}) {
-  const user = {
-    creatorId: null,
+export function buildCourse(params: Partial<CourseInsert> & { creatorId: number }): CourseInsert {
+  return {
     name: faker.lorem.sentence(),
     description: faker.lorem.paragraph(),
+    ...params,
   }
-
-  return Object.assign({}, user, params)
 }
 
-export function buildCourseLesson(params = {}) {
-  const lesson = {
-    courseId: null,
+export function buildCourseLesson(
+  params: Partial<CourseLessonInsert> & { courseId: number },
+): CourseLessonInsert {
+  return {
     name: faker.lorem.sentence(),
     body: faker.lorem.paragraph(),
+    ...params,
   }
-
-  return Object.assign({}, lesson, params)
 }
