@@ -54,3 +54,15 @@ test('delete lessons/:id', async ({ app }) => {
 
     assert.equal(res.statusCode, 204, res.body)
 })
+
+test('get lessons returns data and meta', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const res = await app.inject({ url: '/api/lessons', headers })
+  assert.equal(res.statusCode, 200, res.body)
+
+  const json = JSON.parse(res.body)
+  assert.ok(Array.isArray(json.data))
+  assert.ok(json.meta)
+  assert.equal(typeof json.meta.total, 'number')
+})

@@ -184,3 +184,15 @@ test('delete courses/:id removes its lessons', async ({ app }) => {
     })
     assert.equal(res.statusCode, 404, res.body)
 })
+
+test('get courses returns data and meta', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const res = await app.inject({ url: '/api/courses', headers })
+  assert.equal(res.statusCode, 200, res.body)
+
+  const json = JSON.parse(res.body)
+  assert.ok(Array.isArray(json.data))
+  assert.ok(json.meta)
+  assert.equal(typeof json.meta.total, 'number')
+})

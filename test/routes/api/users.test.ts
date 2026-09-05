@@ -160,3 +160,46 @@ test('delete user with courses returns 409', async ({ app }) => {
 
     assert.equal(res.statusCode, 409, res.body)
 })
+
+test('get users returns data and meta', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const res = await app.inject({ url: '/api/users', headers })
+  assert.equal(res.statusCode, 200, res.body)
+
+  const json = JSON.parse(res.body)
+  assert.ok(Array.isArray(json.data))
+  assert.ok(json.meta)
+  assert.equal(typeof json.meta.total, 'number')
+})
+
+test('get users meta.total does not depend on perPage', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const small = await app.inject({ url: '/api/users?perPage=1', headers })
+  const big = await app.inject({ url: '/api/users?perPage=100', headers })
+
+  assert.equal(JSON.parse(small.body).meta.total, JSON.parse(big.body).meta.total)
+})
+
+test('get users meta.perPage matches applied value', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const withDefault = await app.inject({ url: '/api/users', headers })
+  assert.equal(JSON.parse(withDefault.body).meta.perPage, 10)
+
+  const explicit = await app.inject({ url: '/api/users?perPage=5', headers })
+  assert.equal(JSON.parse(explicit.body).meta.perPage, 5)
+})
+
+test('get users meta.totalPages changes with perPage', async ({ app }) => {
+  const headers = getAuthHeader(app)
+
+  const onePerPage = await app.inject({ url: '/api/users?perPage=1', headers })
+  const tenPerPage = await app.inject({ url: '/api/users?perPage=10', headers })
+
+  assert.notEqual(
+    JSON.parse(onePerPage.body).meta.totalPages,
+    JSON.parse(tenPerPage.body).meta.totalPages,
+  )
+})
