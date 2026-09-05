@@ -1,6 +1,6 @@
 import * as assert from 'node:assert'
 import { asc } from 'drizzle-orm'
-import { buildUser } from '../../../src/lib/data.ts'
+import { buildUser, buildUserRecord } from '../../../src/lib/data.ts'
 import * as schemas from '../../../src/db/schema.ts'
 import { createTest, getAuthHeader } from '../../helper.ts'
 
@@ -39,6 +39,44 @@ test('post users', async ({ app }) => {
   assert.equal(res.statusCode, 201, res.body)
 })
 
+test('post users email already taken', async ({ app }) => {
+  const first = buildUser()
+  await app.inject({
+    method: 'post',
+    url: '/api/users',
+    body: first
+  })
+
+  const duplicate = buildUser({ email: first.email})
+  const res = await app.inject({
+    method: 'post',
+    url: '/api/users',
+    body: duplicate
+  })
+
+  assert.equal(res.statusCode, 422, res.body)
+
+})
+
+test('post users email already taken (different case)', async ({ app }) => {
+  const first = buildUser()
+
+  await app.inject({
+    method: 'post',
+    url: '/api/users',
+    body: first
+  })
+
+  const duplicate = buildUser({ email: first.email.toUpperCase() })
+  const res = await app.inject({
+    method: 'post',
+    url: '/api/users',
+    body: duplicate
+  })
+
+  assert.equal(res.statusCode, 422, res.body)
+})
+
 test('delete users/:id', async ({ app }) => {
   const headers = getAuthHeader(app)
   const user = await app.db.query.users.findFirst({ orderBy: asc(schemas.users.id) })
@@ -50,4 +88,24 @@ test('delete users/:id', async ({ app }) => {
     headers
   })
   assert.equal(res.statusCode, 204, res.body)
+})
+
+test('delete user with courses returns 409', async ({ app }) => {
+    const [user] = await app.db.insert(schemas.users).values(await buildUserRecord()).returning()
+    const headers = { authorization: `Bearer ${app.jwt.sign({ id: user.id })}` }
+
+    await app.inject({
+      method: 'post',
+      url: '/api/courses',
+      body: { name: 'Test course', description: 'Test description' },
+      headers
+    })
+
+    const res = await app.inject({
+      method: 'delete',
+      url: `/api/users/${user.id}`,
+      headers
+    })
+
+    assert.equal(res.statusCode, 409, res.body)
 })
